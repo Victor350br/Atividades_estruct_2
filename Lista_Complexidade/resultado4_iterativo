@@ -1,0 +1,122 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+#include <time.h>
+
+int fib[1500] = {0};
+
+int fibonacci(int n){
+    if (n <= 1) {
+        return n;
+    }
+    int a = 0;
+    int b = 1; 
+    int temp = 0;
+
+    for (int i = 2; i <= n; i++) {
+        temp = a + b;
+        a = b;
+        b = temp;
+    }
+    return b;
+}
+
+int main(int argc, char *argv[]){
+    setlocale(LC_ALL, "");
+    int n = atoi(argv[1]);
+    int max = atoi(argv[2]);
+    clock_t start, end;
+    double tempo = 0.0;
+    int resultado = 0;
+
+    for(int i = 0; i < max; i++){
+        start = clock();
+        resultado = fibonacci(n);
+        end = clock();
+        tempo += ((double)(end - start)) / CLOCKS_PER_SEC;
+        printf("Progresso: %.1f%% concluido\n", ((i+1) / (double)max) * 100);
+    }
+
+    printf("start = %ld, end = %ld\n", start, end);
+
+    printf("Fibonacci na posicao %d eh %d\n", n, resultado);
+    printf("Tempo medio: %f µs\n", (tempo/max)*1e6);
+    return 0;
+}
+
+// 10 1000 = Fibonacci na posicao 10 eh 55
+Tempo medio: 0,000000 µs
+
+// 20 1000 = Fibonacci na posicao 20 eh 6765
+Tempo medio: 0,000000 µs
+
+// 30 1000 = Fibonacci na posicao 30 eh 832040
+Tempo medio: 0,000000 µs
+
+// 40 1000 = Fibonacci na posicao 40 eh 102334155
+Tempo medio: 1,000000 µs
+
+// 50 1000 = Fibonacci na posicao 50 eh -298632863
+Tempo medio: 1,000000 µs
+
+// 60 1000 = Fibonacci na posicao 60 eh 1820529360
+Tempo medio: 4,000000 µs
+
+// 70 1000 = Fibonacci na posicao 70 eh 885444751
+Tempo medio: 0,000000 µs
+
+// 80 1000 = Fibonacci na posicao 80 eh -285007387
+Tempo medio: 1,000000 µs
+
+// 100 1000 = Fibonacci na posicao 100 eh -980107325
+Tempo medio: 0,000000 µs
+
+// 150 1000 = Fibonacci na posicao 150 eh 626779336
+Tempo medio: 0,000000 µs
+
+// 200 1000 = Fibonacci na posicao 200 eh -552082539
+Tempo medio: 0,000000 µs
+
+// 300 1000 = Fibonacci na posicao 300 eh -1287770608
+Tempo medio: 0,000000 µs
+
+// 500 1000 = Fibonacci na posicao 500 eh 315178285
+Tempo medio: 0,000000 µs
+
+// 1000 1000 = Fibonacci na posicao 1000 eh 1556111435
+Tempo medio: 2,000000 µs
+
+// 1500 1000 = Fibonacci na posicao 1500 eh 1711437392
+Tempo medio: 14,000000 µs
+
+// 2000 1000 = Fibonacci na posicao 2000 eh 1392522469
+Tempo medio: 15,000000 µs
+
+// 3000 1000 = Fibonacci na posicao 3000 eh 993652896
+Tempo medio: 8,000000 µs
+
+// 5000 1000 = Fibonacci na posicao 5000 eh -1846256875
+Tempo medio: 18,000000 µs
+
+// 10000 1000 = Fibonacci na posicao 10000 eh 1242044891
+Tempo medio: 46,000000 µs
+
+// 20000 1000 = Fibonacci na posicao 20000 eh 936372485
+Tempo medio: 91,000000 µs
+
+// 50000 1000 = Fibonacci na posicao 50000 eh -1059319835
+Tempo medio: 167,000000 µs
+
+// 100000 1000 = Fibonacci na posicao 100000 eh 873876091
+Tempo medio: 442,000000 µs
+
+// 800000 1000 = Fibonacci na posicao 800000 eh 665915333
+Tempo medio: 2635,000000 µs
+
+// 2500000 1000 = Fibonacci na posicao 2500000 eh 1924780155
+Tempo medio: 8490,000000 µs
+
+// 3000000 1000 = Fibonacci na posicao 3000000 eh 768372992
+Tempo medio: 8731,000000 µs
+
+// 5000000 1000 = Algoritmo proibitivo
