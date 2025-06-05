@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <locale.h>
+#include <time.h>
+
+int fib[1500] = {0};
+
+int fibonacci(int n) {
+    double sqrt5 = sqrt(5);
+    double phi = (1 + sqrt5) / 2;
+    double fib_n = (pow(phi, n) - pow(-phi, -n)) / sqrt5;
+    return (int)(round(fib_n));
+}
+
+int main(int argc, char *argv[]){
+    setlocale(LC_ALL, "");
+    int n = atoi(argv[1]);
+    int max = atoi(argv[2]);
+    clock_t start, end;
+    double tempo = 0.0;
+    int resultado = 0;
+
+    for(int i = 0; i < max; i++){
+        start = clock();
+        resultado = fibonacci(n);
+        end = clock();
+        tempo += ((double)(end - start)) / CLOCKS_PER_SEC;
+        printf("Progresso: %.1f%% concluido\n", ((i+1) / (double)max) * 100);
+    }
+
+    printf("Fibonacci na posicao %d eh %d\n", n, resultado);
+    printf("Tempo medio: %f µs\n", (tempo/max)*1e6);
+    return 0;
+}
+
+// 10 1000 = Fibonacci na posicao 10 eh 55
+Tempo medio: 0,000000 µs
+
+// 100 1000 = Fibonacci na posicao 100 eh -2147483648
+Tempo medio: 0,000000 µs
+
+// 1000 1000 = Fibonacci na posicao 1000 eh -2147483648
+Tempo medio: 0,000000 µs
+
+// 10000 1000 = Fibonacci na posicao 10000 eh -2147483648
+Tempo medio: 1,000000 µs
+
+// 100000 1000 = Fibonacci na posicao 100000 eh -2147483648
+Tempo medio: 2,000000 µs
+
+// 1000000 1000 = Fibonacci na posicao 1000000 eh -2147483648
+Tempo medio: 3,000000 µs
+
+// 10000000 1000 = Fibonacci na posicao 10000000 eh -2147483648
+Tempo medio: 4,000000 µs
+
+// ...
