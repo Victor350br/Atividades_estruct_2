@@ -1,0 +1,131 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct Aluno{
+    char nome[50];
+    int matricula;
+    float nota;
+    struct Aluno* esquerdo;
+    struct Aluno* direito;
+} Aluno;
+
+Aluno* criarNo(char* nome, int mat, float nota){
+    Aluno *novo = malloc(sizeof(Aluno));
+    if(novo){
+        novo->direito = NULL;
+        novo->esquerdo = NULL;
+        strcpy(novo->nome, nome);
+        novo->matricula = mat;
+        novo->nota = nota;
+    }else{
+        printf("\n-> Erro.\n\n");
+        exit(1);
+    }
+    return novo;
+}
+
+Aluno* inserirAluno(Aluno* raiz, char* nome, int mat, float nota){
+    if(raiz == NULL){
+        return criarNo(nome, mat, nota);
+    }
+    if(strcmp(nome, raiz->nome) > 0){
+        raiz->direito = inserirAluno(raiz->direito, nome, mat, nota);
+    }else{
+        raiz->esquerdo = inserirAluno(raiz->esquerdo, nome, mat, nota);
+    }
+    return raiz;
+}
+
+void preOrdem(Aluno* raiz){
+    if(raiz != NULL){
+        printf("\n--------------\n");
+        printf("Nome: %s\n", raiz->nome);
+        printf("Matricula: %d\n", raiz->matricula);
+        printf("Nota: %.1f\n", raiz->nota);
+        preOrdem(raiz->esquerdo);
+        preOrdem(raiz->direito);
+    }
+}
+
+void inOrdem(Aluno* raiz){
+    if(raiz != NULL){
+        inOrdem(raiz->esquerdo);
+        printf("\n--------------\n");
+        printf("Nome: %s\n", raiz->nome);
+        printf("Matricula: %d\n", raiz->matricula);
+        printf("Nota: %.1f\n", raiz->nota);
+        inOrdem(raiz->direito);
+    }
+}
+
+void posOrdem(Aluno* raiz){
+    if(raiz != NULL){
+        posOrdem(raiz->esquerdo);
+        posOrdem(raiz->direito);
+        printf("\n--------------\n");
+        printf("Nome: %s\n", raiz->nome);
+        printf("Matricula: %d\n", raiz->matricula);
+        printf("Nota: %.1f\n", raiz->nota);
+    }
+}
+
+void buscarAluno(Aluno* raiz, char* nome){
+    if(raiz == NULL){
+        printf("\n-> Aluno desconhecido.\n");
+        return;
+    }
+    if(strcmp(nome, raiz->nome) == 0 ){
+        printf("\n->Estudante %s encontrado.\n", raiz->nome);
+    }else if(strcmp(nome, raiz->nome) > 0){
+        buscarAluno(raiz->direito, nome);
+    }else{
+        buscarAluno(raiz->esquerdo, nome);
+    }
+}
+
+int contagem(Aluno* raiz){
+    if(raiz != NULL){
+        return 1 + contagem(raiz->esquerdo) + contagem(raiz->direito);
+    }else{
+        return 0;
+    }
+}
+
+float calcMedia(Aluno* raiz){
+    if(raiz != NULL){
+        return raiz->nota + calcMedia(raiz->esquerdo) + calcMedia(raiz->direito);
+    }else{
+        return 0;
+    }
+}
+
+void removerAlunos(Aluno* raiz){
+    if(raiz != NULL){
+        removerAlunos(raiz->esquerdo);
+        removerAlunos(raiz->direito);
+        free(raiz);
+    }
+}
+
+int main(){
+    Aluno* raiz = NULL;
+    raiz = inserirAluno(raiz, "Larissa", 1, 9.0);
+    raiz = inserirAluno(raiz, "Fabio", 2, 7.0);
+    raiz = inserirAluno(raiz, "Sophia", 3, 8.0);
+    
+    printf("\n-> preOrdem: ");
+    preOrdem(raiz);
+    printf("\n-> inOrdem: ");
+    inOrdem(raiz);
+    printf("\n-> posOrdem: ");
+    posOrdem(raiz);
+
+    printf("\n-> A media das notas eh: %.1f.\n", calcMedia(raiz)/contagem(raiz));
+
+    buscarAluno(raiz, "Sophia");
+
+    removerAlunos(raiz);
+
+    return 0;
+}
