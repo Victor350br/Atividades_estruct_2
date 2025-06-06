@@ -1,0 +1,144 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct no{
+    int dado;
+    struct no* esquerdo;
+    struct no* direito;
+} no;
+
+no* criarNo(int dado){
+    no* novo = malloc(sizeof(no));
+    if(novo){
+        novo->direito = NULL;
+        novo->esquerdo = NULL;
+        novo->dado = dado;
+    }else{
+        printf("\n1 -> Erro.\n");
+    }
+    return novo;
+}
+
+no* inserirNo(no* raiz, int dado){
+    if(raiz == NULL){
+        return criarNo(dado);
+    }
+    if(raiz->dado < dado){
+        raiz->direito = inserirNo(raiz->direito, dado);
+        return raiz;
+    } else{
+        raiz->esquerdo = inserirNo(raiz->esquerdo, dado);
+        return raiz;
+    }
+}
+
+void buscarNo(no*raiz, int dado, int pos){
+    if(raiz == NULL){
+        printf("\n-> Dado nao encontrado.\n");
+    }
+    if(dado == raiz->dado){
+        printf("\n-> profundidade: %d\n", pos);
+        printf("-> Nivel: %d\n", pos);
+    }else if(dado > raiz->dado){
+        buscarNo(raiz->direito, dado, pos+1);
+    }else{
+        buscarNo(raiz->esquerdo, dado, pos+1);
+    }
+}
+
+void removerNo(no* raiz){
+    if(raiz != NULL){
+        removerNo(raiz->esquerdo);
+        removerNo(raiz->direito);
+        free(raiz);
+    }
+}
+
+void preOrdem(no* raiz){
+    if(raiz != NULL){
+        printf("%d ", raiz->dado);
+        preOrdem(raiz->esquerdo);
+        preOrdem(raiz->direito);
+    }
+}
+
+void inOrdem(no* raiz){
+    if(raiz != NULL){
+        inOrdem(raiz->esquerdo);
+        printf("%d ", raiz->dado);
+        inOrdem(raiz->direito);
+    }
+}
+
+void posOrdem(no* raiz){
+    if(raiz != NULL){
+        posOrdem(raiz->esquerdo);
+        posOrdem(raiz->direito);
+        printf("%d ", raiz->dado);
+    }
+}
+
+int altura(no* raiz){
+    int altLeft = 0, altRight = 0; 
+    if(raiz != NULL){
+        altLeft = altura(raiz->esquerdo);
+        altRight = altura(raiz->direito);
+        return 1 + (altLeft > altRight ? altLeft : altRight);
+    } else{
+        return 0;
+    }
+}
+
+int contagem(no*raiz){
+    if(raiz != NULL){
+        return 1 + contagem(raiz->direito) + contagem(raiz->esquerdo);
+    }else{
+        return 0;
+    }
+}
+
+int contFolhas(no* raiz) {
+    if (raiz == NULL) {
+        return 0;
+    }
+    if (raiz->esquerdo == NULL && raiz->direito == NULL) {
+        return 1;
+    } else {
+        return contFolhas(raiz->esquerdo) + contFolhas(raiz->direito);
+    }
+}
+
+int calc(no* raiz){
+    if(raiz != NULL){
+        return raiz->dado + (calc(raiz->direito) + calc(raiz->esquerdo));
+    }else{
+        return 0;
+    }
+}
+
+int main(){
+    no *raiz = NULL;
+
+    raiz = inserirNo(raiz, 10);
+    raiz = inserirNo(raiz, 12);
+    raiz = inserirNo(raiz, 5);
+    raiz = inserirNo(raiz, 7);
+    raiz = inserirNo(raiz, 11);
+
+    buscarNo(raiz, 7, 0);
+    
+    printf("\n-> preOrdem: \n");
+    preOrdem(raiz);
+    printf("\n-> inOrdem: \n");
+    inOrdem(raiz);
+    printf("\n-> posOrdem: \n");
+    posOrdem(raiz);
+
+    printf("\n-> A soma total dos valores: %d", calc(raiz));
+    printf("\n-> Quantidade de no-folhas: %d", contFolhas(raiz));
+    printf("\n-> A arvore possui %d nos no total", contagem(raiz));
+    printf("\n-> A altura da arvore eh: %d\n", altura(raiz));
+    
+    removerNo(raiz);
+    return 0;
+}
